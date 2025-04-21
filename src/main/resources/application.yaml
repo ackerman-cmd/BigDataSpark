@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:secret@mongodb:27017/sales_db?authSource=admin
+  datasource:
+    url: jdbc:postgresql://postgres:6433/sales_db
+    username: admin
+    password: secret
