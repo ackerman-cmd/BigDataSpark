@@ -2,7 +2,31 @@ spring:
   data:
     mongodb:
       uri: mongodb://admin:secret@mongodb:27017/sales_db?authSource=admin
+
   datasource:
     url: jdbc:postgresql://postgres:6433/sales_db
     username: admin
     password: secret
+
+custom:
+  cassandra:
+    contact-points: cassandra
+    port: 9042
+    keyspace: sales
+
+  clickhouse:
+    url: jdbc:clickhouse://clickhouse:8123/sales_db
+    user: admin
+    password: secret
+
+  neo4j:
+    uri: bolt://neo4j:7687
+    user: neo4j
+    password: password-secret
+
+spark:
+  master: spark://spark-master:7077
+  app-name: SnowflakeETLPipeline
+input:
+  csv:
+    path: /opt/bitnami/spark/data/mock_data.csv

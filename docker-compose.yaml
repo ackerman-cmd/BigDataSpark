@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-spark
+    container_name: spark-master
     environment:
       - SPARK_MODE=master
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
@@ -13,12 +14,14 @@ services:
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
     ports:
-      - '8000:8000'
       - '7077:7077'
+      - '8080:8080'
     volumes:
-      - ./target:/opt/bitnami/spark/jars
+      - ./target/BigDataSparkProject-0.0.1-SNAPSHOT.jar:/opt/bitnami/spark/jars/BigDataSparkProject-0.0.1-SNAPSHOT.jar
       - ./mock_data:/opt/bitnami/spark/data
       - ./src/main/resources/config.properties:/opt/bitnami/spark/conf/config.properties
+    networks:
+      - shared
 
   postgres:
     image: postgres:latest
@@ -80,26 +83,37 @@ services:
       - shared
 
   neo4j:
-    image: neo4j:5.23
+    image: neo4j:5.23-enterprise
     container_name: neo4j-db
     environment:
       - NEO4J_AUTH=neo4j/password-secret
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
     ports:
       - '7474:7474'
       - '7687:7687'
     volumes:
       - neo4j_data:/data
-      - ./neo4j/init-db.sh:/init-db.sh
+      - ./neo4j/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     networks:
       - shared
 
   valkey:
-      image: valkey/valkey:8.0
-      container_name: valkey-db
-      ports:
-        - '6379:6379'
-      volumes:
-        - valkey_data:/data
+    image: valkey/valkey:8.0
+    container_name: valkey-db
+    ports:
+      - '6379:6379'
+    volumes:
+      - valkey_data:/data
+      - ./valkey:/valkey
+    command: >
+      bash -c "
+        valkey-server --dir /data --bind 0.0.0.0 --daemonize yes &&
+        sleep 10 &&
+        /valkey/init-valkey.sh &&
+        tail -f /dev/null
+      "
+    networks:
+      - shared
 
 networks:
   shared:
