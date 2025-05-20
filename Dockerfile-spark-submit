@@ -1,0 +1,32 @@
+FROM bitnami/spark:3.5.3
+
+# Установить JVM-опции
+ENV JAVA_OPTS="--add-exports java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED"
+
+WORKDIR /opt/bitnami/spark
+
+# Копировать application.yaml
+COPY src/main/resources/application.yaml /opt/bitnami/spark/conf/application.yaml
+
+# Копировать скрипт
+COPY scripts/run-spark-job.sh /opt/bitnami/spark/run-spark-job.sh
+
+# Переключиться на root
+USER root
+
+# Установить curl
+RUN apt-get update && apt-get install -y curl
+
+# Добавить PostgreSQL JAR
+RUN curl -o /opt/bitnami/spark/jars/postgresql-42.7.3.jar \
+    https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar
+
+# Изменить права
+RUN chown -R 1001:1001 /opt/bitnami/spark/jars && chmod -R 777 /opt/bitnami/spark/jars
+RUN chmod +x /opt/bitnami/spark/run-spark-job.sh
+
+# Вернуться к пользователю 1001
+USER 1001
+
+# Запуск bash в интерактивном режиме
+CMD ["/bin/bash", "-i"]

@@ -1,2 +1,0 @@
-CREATE ROLE IF NOT EXISTS admin WITH PASSWORD = 'secret' AND LOGIN = true AND SUPERUSER = true;
-CREATE KEYSPACE IF NOT EXISTS sales WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};

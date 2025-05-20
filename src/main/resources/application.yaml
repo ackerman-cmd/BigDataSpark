@@ -27,6 +27,9 @@ custom:
 spark:
   master: spark://spark-master:7077
   app-name: SnowflakeETLPipeline
+  ui:
+    enabled:
+      false
 input:
   csv:
     path: /opt/bitnami/spark/data/mock_data.csv
