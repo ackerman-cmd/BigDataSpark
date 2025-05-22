@@ -2,39 +2,13 @@ FROM bitnami/spark:3.5.3
 
 USER root
 
-# Установить curl
+
 RUN apt-get update && apt-get install -y curl
 
-# PostgreSQL JAR
-RUN curl -o /opt/bitnami/spark/jars/postgresql-42.7.3.jar \
-    https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.3/postgresql-42.7.3.jar
 
-# MongoDB Spark Connector
-RUN curl -o /opt/bitnami/spark/jars/mongo-spark-connector_2.12-10.3.0.jar \
-    https://repo1.maven.org/maven2/org/mongodb/spark/mongo-spark-connector_2.12/10.3.0/mongo-spark-connector_2.12-10.3.0.jar
-RUN curl -o /opt/bitnami/spark/jars/mongodb-driver-sync-5.1.0.jar \
-    https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/5.1.0/mongodb-driver-sync-5.1.0.jar
-
-# Cassandra Spark Connector
-RUN curl -o /opt/bitnami/spark/jars/spark-cassandra-connector_2.12-3.5.0.jar \
-    https://repo1.maven.org/maven2/com/datastax/spark/spark-cassandra-connector_2.12/3.5.0/spark-cassandra-connector_2.12-3.5.0.jar
-
-# ClickHouse JDBC
-RUN curl -o /opt/bitnami/spark/jars/clickhouse-jdbc-0.7.3.jar \
-    https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.7.3/clickhouse-jdbc-0.7.3.jar
-
-# Neo4j Spark Connector
-RUN curl -o /opt/bitnami/spark/jars/neo4j-connector-apache-spark_2.12-5.3.0.jar \
-    https://github.com/neo4j-contrib/neo4j-spark-connector/releases/download/5.3.0/neo4j-connector-apache-spark_2.12-5.3.0.jar
-
-# Valkey (Redis) Connector
-RUN curl -o /opt/bitnami/spark/jars/spark-redis_2.12-3.2.0.jar \
-    https://repo1.maven.org/maven2/com/redislabs/spark-redis_2.12/3.2.0/spark-redis_2.12-3.2.0.jar
-
-# Копировать mock_data
 COPY mock_data /opt/bitnami/spark/data
 
-# Изменить права
+
 RUN chown -R 1001:1001 /opt/bitnami/spark/data /opt/bitnami/spark/jars && chmod -R 777 /opt/bitnami/spark/data /opt/bitnami/spark/jars
 
 USER 1001

@@ -11,9 +11,10 @@ services:
       - mongo_data:/data/db
       - ./init-db/init.js:/docker-entrypoint-initdb.d/init.js:ro
     healthcheck:
-      test: mongosh -u "admin" -p "secret" --eval "db.getCollectionNames().includes('sales_db')" || exit 1
+      test: mongosh -u "admin" -p "secret" --eval "db.adminCommand('ping')" || exit 1
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
     networks:
       - shared
