@@ -41,12 +41,12 @@ elif [ "$TASK" == "reports-neo4j" ]; then
 
 
 elif [ "$TASK" == "reports-valkey" ]; then
-  spark-submit --class com.work.bigdatasparkproject.jobs.ClickHouseReportsJob \
+  spark-submit --class com.work.bigdatasparkproject.jobs.ValkeyReportsJob \
                        --master spark://spark-master:7077 \
                        --jars /opt/bitnami/spark/jars/postgresql-42.7.3.jar,/opt/bitnami/spark/libs/*.jar \
                        /opt/bitnami/spark/jars/BigDataSparkProject-0.0.1-SNAPSHOT.jar
 
 else
-    echo "Укажите задачу: load-csv, transform или full-pipeline"
+    echo "Укажите задачу:  transform или reports-clickhouse или reports-mongo или reports-cassandra или reports-neo4j или reports-valkey"
     exit 1
 fi
