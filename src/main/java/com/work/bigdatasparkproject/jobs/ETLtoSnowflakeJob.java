@@ -300,22 +300,31 @@ public class ETLtoSnowflakeJob {
                         "SELECT " +
                                 "c.customer_id, " +
                                 "p.product_id, " +
+                                "sl.seller_id, " +
                                 "s.store_id, " +
                                 "sup.supplier_id, " +
                                 "TO_DATE(m.sale_date, 'MM/dd/yyyy') AS sale_date, " +
                                 "CAST(m.product_quantity AS INTEGER) AS product_quantity, " +
-                                "CAST(m.total_amount AS FLOAT) AS total_amount " +
+                                "CAST(m.sale_total_price AS DECIMAL(10,2)) AS total_amount " +
                                 "FROM mock_data m " +
-                                "JOIN dim_customer c ON m.customer_first_name = c.first_name " +
-                                "AND m.customer_last_name = c.last_name " +
-                                "AND CAST(m.customer_age AS INTEGER) = c.age " +
-                                "JOIN dim_products p ON m.product_name = p.product_name " +
-                                "AND CAST(m.product_price AS FLOAT) = p.product_price " +
-                                "JOIN dim_store s ON m.store_name = s.store_name " +
-                                "AND m.store_location = s.store_location " +
-                                "AND m.store_city = s.store_city " +
-                                "JOIN dim_supplier sup ON m.supplier_city = sup.supplier_city " +
-                                "AND m.supplier_contact = sup.supplier_contact AND m.supplier_address = sup.supplier_address"
+                                "JOIN dim_customer c ON " +
+                                "  m.customer_first_name = c.first_name " +
+                                "  AND m.customer_last_name = c.last_name " +
+                                "  AND CAST(m.customer_age AS INTEGER) = c.age " +
+                                "JOIN dim_products p ON " +
+                                "  m.product_name = p.product_name " +
+                                "  AND CAST(m.product_price AS FLOAT) = p.product_price " +
+                                "JOIN dim_store s ON " +
+                                "  m.store_name = s.store_name " +
+                                "  AND m.store_location = s.store_location " +
+                                "  AND m.store_city = s.store_city " +
+                                "JOIN dim_supplier sup ON " +
+                                "  m.supplier_contact = sup.supplier_contact " +
+                                "  AND m.supplier_city = sup.supplier_city " +
+                                "  AND m.supplier_address = sup.supplier_address " +
+                                "JOIN dim_seller sl ON " +
+                                "  m.seller_first_name = sl.seller_first_name " +
+                                "  AND m.seller_last_name = sl.seller_last_name"
                 );
                 factSales.write()
                         .format("jdbc")
