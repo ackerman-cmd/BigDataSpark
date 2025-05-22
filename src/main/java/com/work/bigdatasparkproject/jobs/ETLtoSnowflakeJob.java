@@ -237,7 +237,7 @@ public class ETLtoSnowflakeJob {
 
                 System.out.println("Заполнение store_info...");
                 Dataset<Row> storeInfo = spark.sql(
-                        "SELECT s.store_id, m.store_country, m.store_postal_code " +
+                        "SELECT s.store_id, m.store_state, m.store_country, m.store_phone, m.store_email " +
                                 "FROM mock_data m " +
                                 "JOIN dim_store s ON m.store_name = s.store_name " +
                                 "AND m.store_location = s.store_location " +
@@ -255,7 +255,7 @@ public class ETLtoSnowflakeJob {
 
                 System.out.println("Заполнение dim_supplier...");
                 Dataset<Row> dimSupplier = spark.sql(
-                        "SELECT DISTINCT supplier_name, supplier_contact " +
+                        "SELECT DISTINCT  supplier_contact, supplier_city, supplier_address " +
                                 "FROM mock_data"
                 );
                 dimSupplier.write()
@@ -280,10 +280,10 @@ public class ETLtoSnowflakeJob {
 
                 System.out.println("Заполнение supplier_info...");
                 Dataset<Row> supplierInfo = spark.sql(
-                        "SELECT s.supplier_id, m.supplier_email, m.supplier_country, m.supplier_postal_code " +
+                        "SELECT s.supplier_id, m.supplier_email, m.supplier_phone, m.supplier_country " +
                                 "FROM mock_data m " +
-                                "JOIN dim_supplier s ON m.supplier_name = s.supplier_name " +
-                                "AND m.supplier_contact = s.supplier_contact"
+                                "JOIN dim_supplier s ON m.supplier_contact = s.supplier_contact " +
+                                "AND m.supplier_city = s.supplier_city AND m.supplier_address = s.supplier_address"
                 );
                 supplierInfo.write()
                         .format("jdbc")
@@ -314,8 +314,8 @@ public class ETLtoSnowflakeJob {
                                 "JOIN dim_store s ON m.store_name = s.store_name " +
                                 "AND m.store_location = s.store_location " +
                                 "AND m.store_city = s.store_city " +
-                                "JOIN dim_supplier sup ON m.supplier_name = sup.supplier_name " +
-                                "AND m.supplier_contact = sup.supplier_contact"
+                                "JOIN dim_supplier sup ON m.supplier_city = sup.supplier_city " +
+                                "AND m.supplier_contact = sup.supplier_contact AND m.supplier_address = sup.supplier_address"
                 );
                 factSales.write()
                         .format("jdbc")

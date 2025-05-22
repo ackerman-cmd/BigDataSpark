@@ -34,7 +34,7 @@ elif [ "$TASK" == "reports-cassandra" ]; then
 
 
 elif [ "$TASK" == "reports-neo4j" ]; then
-  spark-submit --class com.work.bigdatasparkproject.jobs.ClickHouseReportsJob \
+  spark-submit --class com.work.bigdatasparkproject.jobs.Neo4jReportsJob \
                        --master spark://spark-master:7077 \
                        --jars /opt/bitnami/spark/jars/postgresql-42.7.3.jar,/opt/bitnami/spark/libs/*.jar \
                        /opt/bitnami/spark/jars/BigDataSparkProject-0.0.1-SNAPSHOT.jar
